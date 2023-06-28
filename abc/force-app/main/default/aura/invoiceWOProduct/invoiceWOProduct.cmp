@@ -360,131 +360,124 @@
     
     <!--New Filter Start-->
 	<aura:if isTrue="{!v.NewFilter}">
-    tdjdaskll
     	<div class="slds-modal__header">
             <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Triggering Conditions For Work Order</h2>
         </div>
-        <lightning:card>
-            <div class="slds-p-left_medium">
-                <div class="slds-grid slds-gutters">
-                    <div class="slds-col slds-grid slds-gutters slds-size_10-of-12">
-                        <table>
-                        	<tr>
-                            	<td style="Width:10%" class="slds-p-left_medium"><h1 >Rule Name </h1> </td>
-                                <td style="width:20%"><lightning:input class="slds-p-bottom_small slds-col" value="{!v.opportunityfieldMapping[0].ruleName}" type="text" change="{!c.getRuleName}"/></td>
-                                <td class="slds-col slds-p-top_medium" style="width:1%"><ui:inputCheckbox aura:id="filterStateId"  value="{!v.opportunityfieldMapping[0].active}" change="{!c.getFilterStateValue}"/> </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="slds-col slds-size_2-of-12">
-                        <div class="slds-float_right slds-p-right_small slds-m-top_medium">
-                            <h1 class="slds-page-header__title">Add Row 
-                                <lightning:buttonIcon iconName="utility:add"  size="large" variant="bare" alternativeText="Add New Field" onclick="{!c.oppoFieldAdd}"/>
-                            </h1>
+         <lightning:card>
+                    <div class="slds-p-left_medium">
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size_10-of-12">
+                                <table>
+                                        <tr>
+                                            <th style="text-align:right; width:9%;padding-right:12px;">Rule Name :</th>
+                                            <td style="text-align:left; width:91%;"><div class="slds-size_3-of-12" ><lightning:input class="slds-p-bottom_small" value="{!v.opportunityfieldMapping[0].ruleName}" type="text" required="true" onchange="{!c.getRuleName}"/></div></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="text-align:right; width:8%;padding-right:12px;padding-top:10px;">Active :</th>
+                                            <td style="text-align:left; width:92%;padding-top:10px;"><ui:inputCheckbox aura:id="filterStateId" value="{!v.opportunityfieldMapping[0].active}" change="{!c.getFilterStateValue}"/></td>
+                                        </tr>
+                                    
+                                </table>
+                            </div>
+                            <div class="slds-col slds-size_2-of-12">
+                                <div class="slds-float_right slds-p-right_small slds-m-top_medium">
+                                    <h1 class="slds-page-header__title">Add Row 
+                                        <lightning:buttonIcon iconName="utility:add"  size="large" variant="bare" alternativeText="Add New Field" onclick="{!c.oppoFieldAdd}"/>
+                                    </h1>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="slds-p-left_medium">
-                <lightning:select class="slds-float_left slds-p-around_medium" aura:id="selectedCondition" value="{!v.opportunityfieldMapping[0].condition}" name="Operation" label="Operation Condition" required="true" onchange="{!c.getSelectedCondition}" >                        
-                    <option>--None--</option>
-                    <option>AND</option>
-                    <option>OR</option>
-                    <option>Custom Logic</option>
-                </lightning:select>
-            </div>
-                <div>
-                    <lightning:input class="slds-float_left slds-p-around_medium" value="{!v.opportunityfieldMapping[0].logicValue}" name="input1" label="Enter Value" onchange="{!c.getInputValueOnCustomLogic}"/>
-                </div>
+                    <div class="slds-p-left_medium">
+                        <lightning:select class="slds-float_left slds-p-around_medium" aura:id="selectedCondition" value="{!v.opportunityfieldMapping[0].condition}" name="Operation" label="Operation Condition" required="true" onchange="{!c.getSelectedCondition}" >                        
+                            <option>--None--</option>
+                            <option>AND</option>
+                            <option>OR</option>
+                            <option>Custom Logic</option>
+                        </lightning:select>
+                    </div>
+                        <div>
+                            <lightning:input class="slds-float_left slds-p-around_medium" value="{!v.opportunityfieldMapping[0].logicValue}" name="input1" label="Enter Value" onchange="{!c.getInputValueOnCustomLogic}"/>
+                        </div>
+                    
+                    <table class="slds-p-around_medium">
+                        <tbody>
+                            <aura:iteration items="{!v.opoInnerList}" var="eachRow" indexVar="index">
+                                
+                                <tr class="slds-grid slds-gutters slds-p-left_large">
+                                    <div class="slds-p-top_large">
+                                        <ui:outputtext value="{!index + 1}"></ui:outputtext>
+                                    </div>
+                                    <td class="slds-col slds-size_1-of-5">
+                                        <lightning:combobox name="{!index}" value="{!eachRow.opportunityselectField}" label="Select Opportunity Field" placeholder="{!eachRow.opportunityselectField == '' ? '--None--' : eachRow.opportunityselectField}" options="{!v.picklistOptionsList}" onchange="{! c.getFieldValue }"/>
+                                    </td>
+                                    <td class="slds-col slds-size_1-of-5">
+                                        <lightning:select value="{!eachRow.oppoReferenceField}" name="{!index}" label="Assign From" onchange="{!c.getReferenceField}">
+                                            <option>--None--</option>
+                                            <aura:iteration indexVar="index" items="{!v.oppoReferenceFieldList}" var="f">
+                                                <option data-record="{!index}" value="{!f}" text="{!f}"></option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                    </td>
+                                    <td class="slds-col slds-size_1-of-5">
+                                        <lightning:select value="{!eachRow.operator}" name="{!index}" label="Select Operator" required="true" onchange="{!c.getOperatorValue}">
+                                            <option value="--None--">--None--</option>
+                                            <option value="Equals">Equals </option>
+                                            <option value="Does Not Equals">Not Equals</option>
+                                        </lightning:select> 
+                                    </td>
+                                    <td class="slds-col slds-size_1-of-5">
+                                        
+                                        <aura:if isTrue="{!v.onOppoDefaultView}">
+                                            <lightning:input name="{!index}" label="Enter Value" type="text"  value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}" />
+                                        </aura:if>
+                                        
+                                        <aura:if isTrue="{!eachRow.PICKLIST}">
+                                            <lightning:select value="{!eachRow.enteredValue}" name="{!index}" label="Select Value" required="true">
+                                                <option value="Select Field">--None--</option>
+                                                <aura:iteration indexVar="index" items="{!eachRow.picklistValue}" var="f">
+                                                    <option data-record="{!index}" value="{!f}" selected="{!f == eachRow.enteredValue}" text="{!f}"></option>
+                                                </aura:iteration>
+                                            </lightning:select>
+                                        </aura:if>
+                                        <aura:if isTrue="{!eachRow.BOOLEAN}">
+                                            <lightning:select value="{!eachRow.enteredValue}" name="{!index}" label="Enter Boolean Value" required="true" onchange="{!c.getInsertValue}">
+                                                <option>--None--</option>
+                                                <option value="False">False</option>
+                                                <option value="True">True</option>
+                                            </lightning:select>
+                                        </aura:if>
+                                        <aura:if isTrue="{!eachRow.STRING}">
+                                            <lightning:input name="{!index}" label="Enter Text Value" type="text"  value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}"/>
+                                        </aura:if>
+                                        <aura:if isTrue="{!eachRow.TEXTAREA}">
+                                            <lightning:textarea name="{!index}" label="Enter TextArea Value" value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}"/>
+                                        </aura:if>
+                                        <aura:if isTrue="{!eachRow.CURRENCY}">
+                                            <lightning:input name="{!index}" type="number" label="Enter Number Value" value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}"/>
+                                        </aura:if>
+                                        <aura:if isTrue="{!eachRow.DATE}">
+                                            <lightning:input name="{!index}" type="date" label="Enter Date"  value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}"/>
+                                        </aura:if>
+                                        <aura:if isTrue="{!eachRow.INTEGER}">
+                                            <lightning:input name="{!index}" type="number" label="Enter Number" value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}"/>
+                                        </aura:if>
+                                        <aura:if isTrue="{!eachRow.PERCENT}">
+                                            <lightning:input name="{!index}" formatter="percent-fixed" type="number" label="Enter Number value" value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}"/>
+                                        </aura:if>
+                                    </td>
+                                    <td class="slds-col slds-size_1-of-5">
+                                        <a onclick="{!c.oppoFieldDelete}" data-record="{!index}" style="text-align:center">
+                                            <lightning:icon class="slds-align_absolute-left slds-p-top_large" iconName="utility:delete" size="small" alternativeText="Delete Row"/>
+                                            <span class="slds-assistive-text">Delete</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </lightning:card>
         
-            <table class="slds-p-around_medium">
-                <tbody>
-                    <aura:iteration items="{!v.opoInnerList}" var="eachRow" indexVar="index">
-                        <tr class="slds-grid slds-gutters slds-p-left_large">
-                            <div class="slds-p-top_large">
-                                <ui:outputtext value="{!index + 1}"></ui:outputtext>
-                            </div>
-                            <td class="slds-col slds-size_1-of-5">
-                                <lightning:combobox name="{!index}" value="{!eachRow.opportunityselectField}" label="Select Opportunity Field" placeholder="{!eachRow.opportunityselectField == '' ? '--None--' : eachRow.opportunityselectField}" options="{!v.picklistOptionsList}" onchange="{! c.getFieldValue }"/>
-                            </td>
-                            <td class="slds-col slds-size_1-of-5">
-                                <lightning:select value="{!eachRow.oppoReferenceField}" name="{!index}" label="Assign From" onchange="{!c.getReferenceField}">
-                                    <option>--None--</option>
-                                    <aura:iteration indexVar="index" items="{!v.oppoReferenceFieldList}" var="f">
-                                        <option data-record="{!index}" value="{!f}" text="{!f}"></option>
-                                    </aura:iteration>
-                                </lightning:select>
-                            </td>
-                            <td class="slds-col slds-size_1-of-5">
-                                <lightning:select value="{!eachRow.operator}" name="{!index}" label="Select Operator" required="true" onchange="{!c.getOperatorValue}">
-                                    <option value="--None--">--None--</option>
-                                    <option value="Equals">Equals </option>
-                                    <option value="Does Not Equals">Not Equals</option>
-                                </lightning:select> 
-                            </td>
-                            <td class="slds-col slds-size_1-of-5">
-                                
-                                <aura:if isTrue="{!v.onOppoDefaultView}">
-                                    <lightning:input name="{!index}" label="Enter Value" type="text"  value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}" />
-                                </aura:if>
-                                
-                                <aura:if isTrue="{!eachRow.PICKLIST}">
-                                    <lightning:select value="{!eachRow.enteredValue}" name="{!index}" label="Select Value" required="true">
-                                        <option value="Select Field">--None--</option>
-                                        <aura:iteration indexVar="index" items="{!eachRow.picklistValue}" var="f">
-                                            <option data-record="{!index}" value="{!f}" selected="{!f == eachRow.enteredValue}" text="{!f}"></option>
-                                        </aura:iteration>
-                                    </lightning:select>
-                                </aura:if>
-                                <aura:if isTrue="{!eachRow.BOOLEAN}">
-                                    <lightning:select value="{!eachRow.enteredValue}" name="{!index}" label="Enter Boolean Value" required="true" onchange="{!c.getInsertValue}">
-                                        <option>--None--</option>
-                                        <option value="False">False</option>
-                                        <option value="True">True</option>
-                                    </lightning:select>
-                                </aura:if>
-                                <aura:if isTrue="{!eachRow.STRING}">
-                                    <lightning:input name="{!index}" label="Enter Text Value" type="text"  value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}"/>
-                                </aura:if>
-                                <aura:if isTrue="{!eachRow.TEXTAREA}">
-                                    <lightning:textarea name="{!index}" label="Enter TextArea Value" value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}"/>
-                                </aura:if>
-                                <aura:if isTrue="{!eachRow.CURRENCY}">
-                                    <lightning:input name="{!index}" type="number" label="Enter Number Value" value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}"/>
-                                </aura:if>
-                                <aura:if isTrue="{!eachRow.DATE}">
-                                    <lightning:input name="{!index}" type="date" label="Enter Date"  value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}"/>
-                                </aura:if>
-                                <aura:if isTrue="{!eachRow.INTEGER}">
-                                    <lightning:input name="{!index}" type="number" label="Enter Number" value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}"/>
-                                </aura:if>
-                                <aura:if isTrue="{!eachRow.PERCENT}">
-                                    <lightning:input name="{!index}" formatter="percent-fixed" type="number" label="Enter Number value" value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}"/>
-                                </aura:if>
-                            </td>
-                            <td class="slds-col slds-size_1-of-5">
-                                <a onclick="{!c.oppoFieldDelete}" data-record="{!index}" style="text-align:center">
-                                    <lightning:icon class="slds-align_absolute-left slds-p-top_large" iconName="utility:delete" size="small" alternativeText="Delete Row"/>
-                                    <span class="slds-assistive-text">Delete</span>
-                                </a>
-                            </td>
-                        </tr>
-                    </aura:iteration>
-                </tbody>
-            </table>
-        </lightning:card>
-        <div>
-            <footer class="slds-modal__footer">
-                <aura:if isTrue="{!v.onNewFilterToggle}">
-                    <lightning:button variant="brand" label="Cancel" onclick="{! c.backToAllFilter }"/>
-                    <lightning:button variant="neutral" label="Next" onclick="{! c.doNext_UI_1 }" />
-                </aura:if>
-                <aura:if isTrue="{!v.onInvoiceFilterToggle}">
-                    <lightning:button variant="neutral" label="Back" onclick="{! c.backToInvoice}"/>
-                    <lightning:button variant="brand" label="Next" onclick="{! c.nextToWoInvoice }" />
-                </aura:if>
-            </footer>
-        </div>
     </aura:if>
     <!--New Filter End-->
     
