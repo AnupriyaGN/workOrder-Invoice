@@ -32,6 +32,19 @@
             	'InnerList':[],
         });   
         component.set('v.opportunityfieldMapping',opportunityFieldlist); 
+        
+        var opoInnerList = component.get('v.opoInnerList');
+        opoInnerList.push({
+                'opportunityselectField': '',
+            	'oppoReferenceField': '',
+                'operator': '',
+                'enteredValue': '',
+                'picklistValue' : [],
+                'PICKLIST': false,
+                'BOOLEAN':false,
+            	'typeInput':'text'
+        });
+        component.set('v.opoInnerList',opoInnerList); 
 	},
     openFilterList : function(component,event,helper){
         component.set("v.ShowFilter",true);
@@ -50,6 +63,7 @@
     BackToUI1: function(component,event,helper){
 		component.set("v.Configuration",false);
         component.set("v.UI1",true);
+        component.set("v.NewFilter");
     },
     getSalesCloudPlatform : function(component,event,helper){
         component.set("v.platformSelectionList",[]);
@@ -113,69 +127,17 @@
         console.log(event.currentTarget.dataset.recordid);
         
     },
-    createNewFilter : function(component, event, helper){
-        console.log('in newfilter');
-        var platformSelectionList = component.get("v.platformSelectionList");
-        //component.set('v.UI1', false);  
-        //component.set('v.NewFilter', true); 
-        //component.set('v.Configuration', false);
-        
-        /*console.log('tetsing   ',component.get("v.EditFilter"));
-        if(component.get("v.EditFilter")){
-            console.log('in if condition');
-            helper.selectOptions(component, event);
-            helper.getWorkOrderField(component, event);
-            helper.getWorkOrderLineItemField(component, event);
-            helper.woRelatedPicklistValue(component, event);
-            component.set("v.errorMessage","");
-            component.set('v.setFilterToggle',true);
-            component.set('v.hideUI1', true);
-            console.log("Hello,1");
-            component.set('v.onNewFilterToggle', true);
-            console.log("Hello,2");
-            component.set('v.allFiltersToggle',false);
-            component.set("v.viewFilterToggle",false);
-            console.log("Helle,3");
-            component.set('v.onInvoiceFilterToggle', false);
-            
-        }*/
-         
-         
-       	/*if(component.get("v.WOrecordTypeListSelected").length <= 0){            
-       		component.set("v.errorMessage","Please Fill RecordType Configuration");
-            helper.showErrorToast(component, event);
-        }else if(component.get("v.WOFieldSetValueListSelected").length <= 0){            
-            component.set("v.errorMessage","Please Fill WorkOrder FieldSet Configuration");
-            helper.showErrorToast(component, event);
-        }else if(component.get("v.WOLIFieldSetValueListSelected").length <= 0){            
-            component.set("v.errorMessage","Please Fill WorkOrder LineItem FieldSet Configuration");
-            helper.showErrorToast(component, event);
-        }else if(platformSelectionList[0].salesCloud == false && platformSelectionList[0].salesforceCPQ == false  && platformSelectionList[0].OnlyOpportunity == false){        	
-            component.set("v.errorMessage","Please Select One Platform");
-            helper.showErrorToast(component, event);
-        }*/
-        
-        
-            console.log('everything is okay!!');
-            //helper.selectOptions(component, event);
-            //helper.getWorkOrderField(component, event);
-            //helper.getWorkOrderLineItemField(component, event);
-            //helper.woRelatedPicklistValue(component, event);
-            component.set("v.errorMessage","");
-            //component.set('v.setFilterToggle',true);
-            component.set('v.UI1', false);  
-            console.log('Before New filter :',component.get('v.NewFilter'));
-            component.set('v.Configuration', false);
-            component.set("v.NewFilter",true); 
-            console.log('After New filter :',component.get('v.NewFilter'));
-            
-            //component.set('v.onNewFilterToggle', true);            
-            //component.set('v.allFiltersToggle',false);            
-            //component.set('v.onInvoiceFilterToggle', false);
-        
+    createNewFilter : function(component, event,helper){
+        component.set('v.NewFilter',true);
+        component.set('v.UI1',false);
+        component.set('v.Configuration',false);
+        helper.SetOpportunityFields(component, event);
     },
-    getRuleName : function(component,event,helper){
+    getSelectedCondition : function(component,event,helper){
+        console.log('getSelectedCondition',component.get("v.opportunityfieldMapping[0].ruleName"));
         
+        console.log('getSelectedCondition  bbbbb',component.get("v.opportunityfieldMapping[0].condition"));
     }
+    
    
 })
