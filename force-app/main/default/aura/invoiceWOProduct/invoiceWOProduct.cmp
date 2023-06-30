@@ -1,7 +1,7 @@
 <aura:component controller="WorkOrderLandingPage" implements="force:appHostable,lightning:isUrlAddressable">
     
     <aura:attribute name="inputType" type="String" default="number" />
-    
+    <aura:attribute name="opportunityfieldMapping" type="list" default="[]"/>
     <!-- Tile Start-->
     <aura:attribute name="UI1" type="boolean"/>
     <aura:attribute name="AllFilterListTile" type="List" default="['All filter','Recently Viewed', 'Active']"/>
@@ -9,8 +9,7 @@
     <aura:attribute name="ShowFilter" type="boolean" default="false"/>
     <aura:attribute name="CurrentFilter" type="string" default="All filter"/>
     
-    <!--Tile end-->
-    
+    <!--Tile ending-->
     <!--Filter List Display Start-->
     <aura:attribute name="allFilterList" type="List"/>
     <!-- Filter List Display End-->
@@ -47,11 +46,6 @@
     
     <!-- New Filter Start-->
     <aura:attribute name="NewFilter" type="boolean" default="False"/>
-    <aura:attribute name="opportunityfieldMapping" type="list" default="[]"/>
-    <aura:attribute name="typeInput" type="String" default="text"/>
-    <aura:attribute name="opoInnerList" type="list" default="[]"/>
-    <aura:attribute name="picklistOptionsList" type="list" default="[]"/>
-    <aura:attribute name="picklistOptionsListDuplicate" type="list" default="[]"/>
     <!-- New Filter End-->
     
     <aura:handler name="init" value="{!this}" action="{!c.myAction}"/>
@@ -358,6 +352,7 @@
             </lightning:tabset>
         </div>
     </aura:if>
+    
     <!-- II Configuration Page End-->
     <!-- Edit Filter Start-->
     
@@ -365,60 +360,51 @@
     
     <!--New Filter Start-->
 	<aura:if isTrue="{!v.NewFilter}">
-        
+    tdjdaskll
     	<div class="slds-modal__header">
-            <div class="slds-float_right">
-            	<lightning:button variant="neutral" label="Back" onclick="{!c.BackToUI1}" />
-        	</div>
             <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Triggering Conditions For Work Order</h2>
         </div>
-         <lightning:card>
-             <div class="slds-p-left_medium">
-                 <div class="slds-grid slds-gutters">
-                     <div class="slds-col slds-size_10-of-12">
-                         <table>
-                             <tr>
-                                 <th style="text-align:right; width:9%;padding-right:12px;">Rule Name :</th>
-                                 <td style="text-align:left; width:91%;"><div class="slds-size_3-of-12" ><lightning:input class="slds-p-bottom_small" value="{!v.opportunityfieldMapping[0].ruleName}" type="text" /></div></td>
-                             </tr>
-                             <tr>
-                                 <th style="text-align:right; width:8%;padding-right:12px;padding-top:10px;">Active :</th>
-                                 <td style="text-align:left; width:92%;padding-top:10px;"><ui:inputCheckbox aura:id="filterStateId" value="{!v.opportunityfieldMapping[0].active}"/></td>
-                             </tr>
-                             
-                         </table>
-                     </div>
-                     <div class="slds-col slds-size_2-of-12">
-                         <div class="slds-float_right slds-p-right_small slds-m-top_medium">
-                             <h1 class="slds-page-header__title">Add Row 
-                                 <lightning:buttonIcon iconName="utility:add"  size="large" variant="bare" alternativeText="Add New Field" onclick="{!c.oppoFieldAdd}"/>
-                             </h1>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-             <div class="slds-p-left_medium">
-                 <lightning:select class="slds-float_left slds-p-around_medium" aura:id="selectedCondition" value="{!v.opportunityfieldMapping[0].condition}" name="Operation" label="Operation Condition" onchange="{!c.getSelectedCondition}" >                        
-                     <option>--None--</option>
-                     <option>AND</option>
-                     <option>OR</option>
-                     <option>Custom Logic</option>
-                 </lightning:select>
-             </div>
-             <div>
-                 <lightning:input class="slds-float_left slds-p-around_medium" value="{!v.opportunityfieldMapping[0].logicValue}" name="input1" label="Enter Value" onchange="{!c.getInputValueOnCustomLogic}"/>
-             </div>
-                    
-             <table class="slds-p-around_medium">
-             	<tbody>
+        <lightning:card>
+            <div class="slds-p-left_medium">
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-grid slds-gutters slds-size_10-of-12">
+                        <table>
+                        	<tr>
+                            	<td style="Width:10%" class="slds-p-left_medium"><h1 >Rule Name </h1> </td>
+                                <td style="width:20%"><lightning:input class="slds-p-bottom_small slds-col" value="{!v.opportunityfieldMapping[0].ruleName}" type="text" change="{!c.getRuleName}"/></td>
+                                <td class="slds-col slds-p-top_medium" style="width:1%"><ui:inputCheckbox aura:id="filterStateId"  value="{!v.opportunityfieldMapping[0].active}" change="{!c.getFilterStateValue}"/> </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="slds-col slds-size_2-of-12">
+                        <div class="slds-float_right slds-p-right_small slds-m-top_medium">
+                            <h1 class="slds-page-header__title">Add Row 
+                                <lightning:buttonIcon iconName="utility:add"  size="large" variant="bare" alternativeText="Add New Field" onclick="{!c.oppoFieldAdd}"/>
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-p-left_medium">
+                <lightning:select class="slds-float_left slds-p-around_medium" aura:id="selectedCondition" value="{!v.opportunityfieldMapping[0].condition}" name="Operation" label="Operation Condition" required="true" onchange="{!c.getSelectedCondition}" >                        
+                    <option>--None--</option>
+                    <option>AND</option>
+                    <option>OR</option>
+                    <option>Custom Logic</option>
+                </lightning:select>
+            </div>
+                <div>
+                    <lightning:input class="slds-float_left slds-p-around_medium" value="{!v.opportunityfieldMapping[0].logicValue}" name="input1" label="Enter Value" onchange="{!c.getInputValueOnCustomLogic}"/>
+                </div>
+        
+            <table class="slds-p-around_medium">
+                <tbody>
                     <aura:iteration items="{!v.opoInnerList}" var="eachRow" indexVar="index">
-                        
                         <tr class="slds-grid slds-gutters slds-p-left_large">
                             <div class="slds-p-top_large">
                                 <ui:outputtext value="{!index + 1}"></ui:outputtext>
                             </div>
                             <td class="slds-col slds-size_1-of-5">
-                                {!V.picklistOptionsList}
                                 <lightning:combobox name="{!index}" value="{!eachRow.opportunityselectField}" label="Select Opportunity Field" placeholder="{!eachRow.opportunityselectField == '' ? '--None--' : eachRow.opportunityselectField}" options="{!v.picklistOptionsList}" onchange="{! c.getFieldValue }"/>
                             </td>
                             <td class="slds-col slds-size_1-of-5">
@@ -484,10 +470,21 @@
                             </td>
                         </tr>
                     </aura:iteration>
-                 </tbody>
-             </table>
+                </tbody>
+            </table>
         </lightning:card>
-        
+        <div>
+            <footer class="slds-modal__footer">
+                <aura:if isTrue="{!v.onNewFilterToggle}">
+                    <lightning:button variant="brand" label="Cancel" onclick="{! c.backToAllFilter }"/>
+                    <lightning:button variant="neutral" label="Next" onclick="{! c.doNext_UI_1 }" />
+                </aura:if>
+                <aura:if isTrue="{!v.onInvoiceFilterToggle}">
+                    <lightning:button variant="neutral" label="Back" onclick="{! c.backToInvoice}"/>
+                    <lightning:button variant="brand" label="Next" onclick="{! c.nextToWoInvoice }" />
+                </aura:if>
+            </footer>
+        </div>
     </aura:if>
     <!--New Filter End-->
     
