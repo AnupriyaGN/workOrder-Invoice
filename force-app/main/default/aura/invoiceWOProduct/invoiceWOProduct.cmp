@@ -48,10 +48,12 @@
     <!-- New Filter Start-->
     <aura:attribute name="NewFilter" type="boolean" default="False"/>
     <aura:attribute name="opportunityfieldMapping" type="list" default="[]"/>
-    <aura:attribute name="typeInput" type="String" default="text"/>
+    <aura:attribute name="typeInput" type="String" />
     <aura:attribute name="opoInnerList" type="list" default="[]"/>
     <aura:attribute name="picklistOptionsList" type="list" default="[]"/>
     <aura:attribute name="picklistOptionsListDuplicate" type="list" default="[]"/>
+    <aura:attribute name="fieldType" type="string"/>
+
     <!-- New Filter End-->
     
     <aura:handler name="init" value="{!this}" action="{!c.myAction}"/>
@@ -418,11 +420,10 @@
                                 <ui:outputtext value="{!index + 1}"></ui:outputtext>
                             </div>
                             <td class="slds-col slds-size_1-of-5">
-                                {!V.picklistOptionsList}
-                                <lightning:combobox name="{!index}" value="{!eachRow.opportunityselectField}" label="Select Opportunity Field" placeholder="{!eachRow.opportunityselectField == '' ? '--None--' : eachRow.opportunityselectField}" options="{!v.picklistOptionsList}" onchange="{! c.getFieldValue }"/>
+                                <lightning:combobox name="{!index}" value="{!eachRow.opportunityselectField}" label="Select Opportunity Field" placeholder="{!eachRow.opportunityselectField == '' ? '--None--' : eachRow.opportunityselectField}" options="{!v.picklistOptionsList}" onchange="{!c.getFieldValueOpportunity}"/>
                             </td>
                             <td class="slds-col slds-size_1-of-5">
-                                <lightning:select value="{!eachRow.oppoReferenceField}" name="{!index}" label="Assign From" onchange="{!c.getReferenceField}">
+                                <lightning:select value="{!eachRow.oppoReferenceField}" name="{!index}" label="Assign From" >
                                     <option>--None--</option>
                                     <aura:iteration indexVar="index" items="{!v.oppoReferenceFieldList}" var="f">
                                         <option data-record="{!index}" value="{!f}" text="{!f}"></option>
@@ -430,18 +431,16 @@
                                 </lightning:select>
                             </td>
                             <td class="slds-col slds-size_1-of-5">
-                                <lightning:select value="{!eachRow.operator}" name="{!index}" label="Select Operator" required="true" onchange="{!c.getOperatorValue}">
+                                <lightning:select value="{!eachRow.operator}" name="{!index}" label="Select Operator" required="true" >
                                     <option value="--None--">--None--</option>
                                     <option value="Equals">Equals </option>
                                     <option value="Does Not Equals">Not Equals</option>
                                 </lightning:select> 
                             </td>
                             <td class="slds-col slds-size_1-of-5">
-                                
-                                <aura:if isTrue="{!v.onOppoDefaultView}">
-                                    <lightning:input name="{!index}" label="Enter Value" type="text"  value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}" />
+                                <aura:if isTrue="{!eachRow.typeInput}">
+                                    <lightning:input name="{!index}" label="Enter Value" type="{!v.typeInput}"  value="{!eachRow.enteredValue}" onclick="{!c.getInsertValueNewFilter}" />
                                 </aura:if>
-                                
                                 <aura:if isTrue="{!eachRow.PICKLIST}">
                                     <lightning:select value="{!eachRow.enteredValue}" name="{!index}" label="Select Value" required="true">
                                         <option value="Select Field">--None--</option>
@@ -450,30 +449,12 @@
                                         </aura:iteration>
                                     </lightning:select>
                                 </aura:if>
-                                <aura:if isTrue="{!eachRow.BOOLEAN}">
-                                    <lightning:select value="{!eachRow.enteredValue}" name="{!index}" label="Enter Boolean Value" required="true" onchange="{!c.getInsertValue}">
-                                        <option>--None--</option>
-                                        <option value="False">False</option>
-                                        <option value="True">True</option>
-                                    </lightning:select>
-                                </aura:if>
-                                <aura:if isTrue="{!eachRow.STRING}">
-                                    <lightning:input name="{!index}" label="Enter Text Value" type="text"  value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}"/>
-                                </aura:if>
-                                <aura:if isTrue="{!eachRow.TEXTAREA}">
-                                    <lightning:textarea name="{!index}" label="Enter TextArea Value" value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}"/>
-                                </aura:if>
-                                <aura:if isTrue="{!eachRow.CURRENCY}">
-                                    <lightning:input name="{!index}" type="number" label="Enter Number Value" value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}"/>
-                                </aura:if>
-                                <aura:if isTrue="{!eachRow.DATE}">
-                                    <lightning:input name="{!index}" type="date" label="Enter Date"  value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}"/>
-                                </aura:if>
-                                <aura:if isTrue="{!eachRow.INTEGER}">
-                                    <lightning:input name="{!index}" type="number" label="Enter Number" value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}"/>
-                                </aura:if>
-                                <aura:if isTrue="{!eachRow.PERCENT}">
-                                    <lightning:input name="{!index}" formatter="percent-fixed" type="number" label="Enter Number value" value="{!eachRow.enteredValue}" onchange="{!c.getInsertValue}"/>
+                               	<aura:if isTrue="{!eachRow.BOOLEAN}">
+                                   <lightning:select value="{!eachRow.enteredValue}" name="{!index}" label="Enter Boolean Value" required="true" onchange="{!c.getInsertValue}">
+                                       <option>--None--</option>
+                                       <option value="False">False</option>
+                                       <option value="True">True</option>
+                                   </lightning:select>
                                 </aura:if>
                             </td>
                             <td class="slds-col slds-size_1-of-5">
