@@ -52,8 +52,7 @@
     <aura:attribute name="opoInnerList" type="list" default="[]"/>
     <aura:attribute name="picklistOptionsList" type="list" default="[]"/>
     <aura:attribute name="picklistOptionsListDuplicate" type="list" default="[]"/>
-    <aura:attribute name="fieldType" type="string"/>
-
+    <aura:attribute name="opoInnerListDup" type="list" default="[]"/>
     <!-- New Filter End-->
     
     <aura:handler name="init" value="{!this}" action="{!c.myAction}"/>
@@ -393,7 +392,7 @@
                      <div class="slds-col slds-size_2-of-12">
                          <div class="slds-float_right slds-p-right_small slds-m-top_medium">
                              <h1 class="slds-page-header__title">Add Row 
-                                 <lightning:buttonIcon iconName="utility:add"  size="large" variant="bare" alternativeText="Add New Field" onclick="{!c.oppoFieldAdd}"/>
+                                 <lightning:buttonIcon iconName="utility:add"  size="large" variant="bare" alternativeText="Add New Field" onclick="{!c.oppoFieldAddNewRow}"/>
                              </h1>
                          </div>
                      </div>
@@ -439,10 +438,10 @@
                             </td>
                             <td class="slds-col slds-size_1-of-5">
                                 <aura:if isTrue="{!eachRow.typeInput}">
-                                    <lightning:input name="{!index}" label="Enter Value" type="{!v.typeInput}"  value="{!eachRow.enteredValue}" onclick="{!c.getInsertValueNewFilter}" />
+                                    <lightning:input name="{!index}" label="Enter Value" type="{!v.typeInput}"  value="{!eachRow.enteredValue}" onchange="{!c.getInsertValueNewFilter}" />
                                 </aura:if>
                                 <aura:if isTrue="{!eachRow.PICKLIST}">
-                                    <lightning:select value="{!eachRow.enteredValue}" name="{!index}" label="Select Value" required="true">
+                                    <lightning:select value="{!eachRow.enteredValue}" name="{!index}" label="Select Value" required="true" onchange="{!c.getInsertValueNewFilter}">
                                         <option value="Select Field">--None--</option>
                                         <aura:iteration indexVar="index" items="{!eachRow.picklistValue}" var="f">
                                             <option data-record="{!index}" value="{!f}" selected="{!f == eachRow.enteredValue}" text="{!f}"></option>
@@ -450,7 +449,7 @@
                                     </lightning:select>
                                 </aura:if>
                                	<aura:if isTrue="{!eachRow.BOOLEAN}">
-                                   <lightning:select value="{!eachRow.enteredValue}" name="{!index}" label="Enter Boolean Value" required="true" onchange="{!c.getInsertValue}">
+                                   <lightning:select value="{!eachRow.enteredValue}" name="{!index}" label="Enter Boolean Value" required="true" onchange="{!c.getInsertValueNewFilter}">
                                        <option>--None--</option>
                                        <option value="False">False</option>
                                        <option value="True">True</option>

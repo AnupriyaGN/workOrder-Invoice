@@ -17,6 +17,7 @@
         $A.enqueueAction(action);
     },
     SetNewFilterPreValues :function(component,event){
+        console.log('Start of rows');
         var opoInnerList = component.get('v.opoInnerList');
         opoInnerList.push({
                 'opportunityselectField': '',
@@ -26,9 +27,10 @@
                 'picklistValue' : [],
                 'PICKLIST': false,
                 'BOOLEAN':false,
-            	'typeInput':false
+            	'typeInput':''
         });
         component.set('v.opoInnerList',opoInnerList); 
+        console.log('End of rows');
     },
     showErrorToast : function(component, event) {
         var errorMessage = component.get('v.errorMessage');
@@ -58,8 +60,8 @@
         $A.enqueueAction(action);
     },
     SetOpportunityFields : function(component,event,helper){
-        console.log('In Helper');
-		 var action = component.get("c.objectFeildsSecond");  
+        
+		var action = component.get("c.objectFeildsSecond");  
         action.setParams({ 
             objectName : 'Opportunity',
             fieldType : 'All',
@@ -76,11 +78,9 @@
                         "value":response.getReturnValue()[val],
                     };
                     optionsList.push(item);  
-                }
-                console.log("all Oppo Fields Values =>",optionsList);
+                }                
                 component.set('v.picklistOptionsList', optionsList); 
-                component.set('v.picklistOptionsListDuplicate', optionsList);
-                console.log("AllOppoField",JSON.stringify(component.get('v.picklistOptionsList')));
+                component.set('v.picklistOptionsListDuplicate', optionsList);                
             }
             else if(state === "ERROR") {
                 var errors = response.getError();
@@ -95,5 +95,6 @@
             }
         });        
         $A.enqueueAction(action);
+        
     } 
 })

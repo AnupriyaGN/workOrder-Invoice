@@ -118,22 +118,22 @@
     createNewFilter : function(component, event,helper){
         // set opp fields for dropdown
         helper.SetOpportunityFields(component, event);
-        console.log('In JS');        component.set('v.NewFilter',true);
+        component.set('v.NewFilter',true);
         component.set('v.UI1',false);
         component.set('v.Configuration',false);
-        console.log('testing picklist values:-',component.get('v.picklistOptionsList'));
     },
+    // NEw Filter upto operator selection.
     getSelectedCondition : function(component,event,helper){
         console.log('getSelectedCondition',component.get("v.opportunityfieldMapping[0].ruleName"));
         console.log('getSelectedCondition  bbbbb',component.get("v.opportunityfieldMapping[0].condition"));
     },
     getFieldValueOpportunity : function(component,event,helper){
-        
-        console.log(event);
+        console.log(component.get("v.opoInnerList"));
         var indexValue = event.getSource().attributes.name.Qh;
         var vv = "v.opoInnerList["+indexValue+"].opportunityselectField";
-        var currentField = component.get(vv);       
+        var currentField = component.get(vv);        
         if(component.get(vv) != event.getSource().get('v.value')){
+            
             var oppfieldList = component.get("v.opoInnerList");
             oppfieldList.splice(indexValue,1);
 			helper.SetNewFilterPreValues(component,event);
@@ -144,26 +144,43 @@
             objectName : 'Opportunity',
             fieldLabel : currentField,   
         });  
-        action.setCallback(this, function(response){
-            console.log('Before : state');
+        action.setCallback(this, function(response){            
             var state = response.getState();           
             if(state === "SUCCESS"){
                 var allValues = response.getReturnValue();                
                 var valNames = Object.values(allValues);                
                 var keyNames = Object.keys(allValues);                               
-                component.set('v.fieldType', allValues);   
-                console.log('type is -',component.get('v.fieldType'));
-                if(component.get('v.fieldType')=='PICKLIST'){
+                component.set('v.typeInput', allValues);
+                if(component.get('v.typeInput')=='PICKLIST'){
                     vv = "v.opoInnerList["+indexValue+"].PICKLIST";
                     component.set(vv,true);
+                    vv = "v.opoInnerList["+indexValue+"].BOOLEAN";
+                    component.set(vv,false);
+                    vv = "v.opoInnerList["+indexValue+"].typeInput";
+                	component.set(vv,false);
                 }
-                else if(component.get('v.fieldType')=='BOOLEAN'){
+                else if(component.get('v.typeInput')=='BOOLEAN'){
                     vv = "v.opoInnerList["+indexValue+"].BOOLEAN";
                     component.set(vv,true);
+                    vv = "v.opoInnerList["+indexValue+"].PICKLIST";
+                    component.set(vv,false);
+                    vv = "v.opoInnerList["+indexValue+"].typeInput";
+                	component.set(vv,false);
                 }
                 else{
-                	vv = "v.opoInnerList["+indexValue+"].typeInput";
-                	component.set(vv,true);   
+                    if(component.get('v.typeInput') == 'CURRENCY'){                        
+						vv = "v.opoInnerList["+indexValue+"].typeInput";
+                		component.set(vv,'number');
+                        component.set('v.typeInput','number');                        
+                    }
+                    else{
+                        vv = "v.opoInnerList["+indexValue+"].typeInput";
+                		component.set(vv,allValues);
+                    }
+                    vv = "v.opoInnerList["+indexValue+"].BOOLEAN";
+                    component.set(vv,false);
+                    vv = "v.opoInnerList["+indexValue+"].PICKLIST";
+                    component.set(vv,false);
                 }
                 console.log('AfterPickList',component.get('v.opoInnerList'));
             }
@@ -181,12 +198,28 @@
             }
         });        
         $A.enqueueAction(action);
+        
+        
     },
-    getInsertValueNewFilter : function(component,event,helper){
-        console.log('get value 2:-',component.get("v.opoInnerList[0].opportunityselectField"));   
-        console.log('get name 2:-',event.currentTarget);
+    getInsertValueNewFilter : function(component,event,helper){                  
         var indexValue = event.getSource().attributes.name.Qh;
-        var vv = "v.opoInnerList["+indexValue+"].opportunityselectField";
-        console.log('uuuuuu',component.get(vv));        
+        console.log('index value:-',indexValue);
+        var opoInnerListRow= component.get("v.opoInnerList");
+        console.log('iiiiii',Object.values(component.get("v.opoInnerList")));
+        console.log('1-',opoInnerListRow[indexValue].opportunityselectField);
+        console.log('1-',opoInnerListRow[indexValue].oppoReferenceField);
+        console.log('1-',opoInnerListRow[indexValue].operator);
+        console.log('1-',opoInnerListRow[indexValue].enteredValue);
+        console.log('test======>',JSON.stringify(component.get("v.opoInnerList")));
+        var selectedField = "v.opoInnerList["+indexValue+"].opportunityselectField";
+        var typeInput = "v.opoInnerList["+indexValue+"].typeInput";
+        var operator = "v.opoInnerList["+indexValue+"].operator";
+       	var enteredValue = "v.opoInnerList["+indexValue+"].enteredValue";
+        console.log(" -> " + opoInnerListRow[0]);
+        console.log('values of oppInnerList:-',component.get("v.opoInnerList"));
+        console.log('value of row ',component.get(selectedField) , component.get(typeInput) , component.get(operator), component.get(enteredValue));  
+    },
+    oppoFieldAddNewRow : function(component,event,helper){
+     	helper.SetNewFilterPreValues(component,event);
     }
 })
