@@ -127,19 +127,16 @@
         console.log('getSelectedCondition',component.get("v.opportunityfieldMapping[0].ruleName"));
         console.log('getSelectedCondition  bbbbb',component.get("v.opportunityfieldMapping[0].condition"));
     },
-    getFieldValueOpportunity : function(component,event,helper){
-        console.log(component.get("v.opoInnerList"));
+    getFieldValueOpportunity : function(component,event,helper){        
         var indexValue = event.getSource().attributes.name.Qh;
         var vv = "v.opoInnerList["+indexValue+"].opportunityselectField";
         var currentField = component.get(vv);        
-        if(component.get(vv) != event.getSource().get('v.value')){
-            
+        if(component.get(vv) != event.getSource().get('v.value')){            
             var oppfieldList = component.get("v.opoInnerList");
             oppfieldList.splice(indexValue,1);
 			helper.SetNewFilterPreValues(component,event);
         }
-        var action = component.get("c.fieldTypeMacherSecond"); 
-        
+        var action = component.get("c.fieldTypeMacherSecond");         
         action.setParams({
             objectName : 'Opportunity',
             fieldLabel : currentField,   
@@ -149,7 +146,9 @@
             if(state === "SUCCESS"){
                 var allValues = response.getReturnValue();                
                 var valNames = Object.values(allValues);                
-                var keyNames = Object.keys(allValues);                               
+                var keyNames = Object.keys(allValues); 
+                var vv = "v.opoInnerList["+indexValue+"].typeInput";
+        		component.set(vv,allValues);        
                 component.set('v.typeInput', allValues);
                 if(component.get('v.typeInput')=='PICKLIST'){
                     vv = "v.opoInnerList["+indexValue+"].PICKLIST";
@@ -198,24 +197,57 @@
             }
         });        
         $A.enqueueAction(action);
+        var removeSelected = component.get("v.removeSelected");  
+        console.log('indexValue',indexValue);
+        console.log('testing:--',removeSelected.indexValue);  
         
+        if(removeSelected==null)
+       		removeSelected.push(event.getSource().get('v.value'));
+        else if(removeSelected[indexValue]==null)
+            removeSelected.push(event.getSource().get('v.value'));
+        else
+            removeSelected[indexValue] = event.getSource().get('v.value');
         
+        component.set("v.removeSelected",removeSelected);
+        console.log('testing again :-',component.get("v.removeSelected"));
+       	var allFields = component.get('v.picklistOptionsListDuplicate');        
+        var duplicateList = []; 
+        var removeSelected = component.get("v.removeSelected");
+        allFields.map(val=>{
+            var bool = false;
+            removeSelected.map(val1=>{
+            	if(val.label==val1)
+            	{
+            		bool = true
+        		}	
+        	});	
+            if(bool!=true){
+                var item = {
+                    "label":val.label,
+                    "value":val.label,
+                };
+               duplicateList.push(item);
+            }   
+    	});
+		component.set('v.picklistOptionsList',duplicateList);
     },
     getInsertValueNewFilter : function(component,event,helper){                  
         var indexValue = event.getSource().attributes.name.Qh;
         console.log('index value:-',indexValue);
-        var opoInnerListRow= component.get("v.opoInnerList");
-        console.log('iiiiii',Object.values(component.get("v.opoInnerList")));
-        console.log('1-',opoInnerListRow[indexValue].opportunityselectField);
-        console.log('1-',opoInnerListRow[indexValue].oppoReferenceField);
-        console.log('1-',opoInnerListRow[indexValue].operator);
-        console.log('1-',opoInnerListRow[indexValue].enteredValue);
+        var opoInnerListRow= component.get("v.opoInnerList");        
         console.log('test======>',JSON.stringify(component.get("v.opoInnerList")));
         var selectedField = "v.opoInnerList["+indexValue+"].opportunityselectField";
         var typeInput = "v.opoInnerList["+indexValue+"].typeInput";
         var operator = "v.opoInnerList["+indexValue+"].operator";
        	var enteredValue = "v.opoInnerList["+indexValue+"].enteredValue";
-        console.log(" -> " + opoInnerListRow[0]);
+        var listForOppInnerList = [];
+        for(var ke in opoInnerListRow){
+            
+            console.log('valll',ke);
+            console.log(" -> " + Object.keys(opoInnerListRow[ke]));
+            console.log(" -> " + Object.values(opoInnerListRow[ke]));
+        }
+        
         console.log('values of oppInnerList:-',component.get("v.opoInnerList"));
         console.log('value of row ',component.get(selectedField) , component.get(typeInput) , component.get(operator), component.get(enteredValue));  
     },

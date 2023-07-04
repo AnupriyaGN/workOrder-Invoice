@@ -52,7 +52,7 @@
     <aura:attribute name="opoInnerList" type="list" default="[]"/>
     <aura:attribute name="picklistOptionsList" type="list" default="[]"/>
     <aura:attribute name="picklistOptionsListDuplicate" type="list" default="[]"/>
-    <aura:attribute name="opoInnerListDup" type="list" default="[]"/>
+  	<aura:attribute name="removeSelected" type="list" default="[]"/>
     <!-- New Filter End-->
     
     <aura:handler name="init" value="{!this}" action="{!c.myAction}"/>
@@ -438,7 +438,7 @@
                             </td>
                             <td class="slds-col slds-size_1-of-5">
                                 <aura:if isTrue="{!eachRow.typeInput}">
-                                    <lightning:input name="{!index}" label="Enter Value" type="{!v.typeInput}"  value="{!eachRow.enteredValue}" onchange="{!c.getInsertValueNewFilter}" />
+                                    <lightning:input name="{!index}" label="Enter Value" type="{!eachRow.typeInput}"  value="{!eachRow.enteredValue}" onchange="{!c.getInsertValueNewFilter}" />
                                 </aura:if>
                                 <aura:if isTrue="{!eachRow.PICKLIST}">
                                     <lightning:select value="{!eachRow.enteredValue}" name="{!index}" label="Select Value" required="true" onchange="{!c.getInsertValueNewFilter}">
@@ -467,7 +467,18 @@
                  </tbody>
              </table>
         </lightning:card>
-        
+        <div>
+            <footer class="slds-modal__footer">
+                <aura:if isTrue="{!v.onNewFilterToggle}">
+                    <lightning:button variant="brand" label="Cancel" onclick="{! c.backToAllFilter }"/>
+                    <lightning:button variant="neutral" label="Next" onclick="{! c.doNext_UI_1 }" />
+                </aura:if>
+                <aura:if isTrue="{!v.onInvoiceFilterToggle}">
+                    <lightning:button variant="neutral" label="Back" onclick="{! c.backToInvoice}"/>
+                    <lightning:button variant="brand" label="Next" onclick="{! c.nextToWoInvoice }" />
+                </aura:if>
+            </footer>
+        </div>
     </aura:if>
     <!--New Filter End-->
     
